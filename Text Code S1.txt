@@ -1,0 +1,33 @@
+# Load necessary libraries
+library      # For ANCOVA
+library(reshape2)  # For reshaping data
+
+# Load the data
+path <- "D:\\Education\\Water journal-2\\Atmosphere\\first revision"
+setwd(path)
+data <- read.csv("IRAN.csv")
+
+# Display the first few rows of the data to understand its structure
+head(data)
+
+# Assuming data has columns named 'Station', 'CP', 'CT', 'MedT', 'MP', 'MT', and 'D'
+
+# Function to perform ANCOVA for each moisture source
+perform_ancova <- function(data, moisture_source) {
+formula <- as.formula(paste("D ~", moisture_source))
+ancova_model <- aov(formula, data = data)
+return(summary(ancova_model))
+}
+
+# List of moisture sources
+moisture_sources <- c("CP", "CT", "MedT", "MP", "MT")
+
+# Perform ANCOVA for each moisture source and store results
+ancova_results <- lapply(moisture_sources, function(source) {
+result <- perform_ancova(data, source)
+return(result)
+})
+
+# Print results for each moisture source
+names(ancova_results) <- moisture_sources
+ancova_results
